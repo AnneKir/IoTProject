@@ -14,7 +14,20 @@
     </form>
     <pre id="outgoing"></pre>
     <script src="simplepeer.min.js"></script>
+    <script> src="client.js"</script>
     <script>
+        const options = {
+          serverUrl: 'http://localhost:8081',
+          simplePeerOptions: {
+          initiator: location.hash === '#1',
+          trickle: false
+          }
+        };
+  
+        const spw = new SimplePeerWrapper(options);
+        spw.connect();
+
+
         const p = new SimplePeer({
           initiator: location.hash === '#1',
           trickle: false
