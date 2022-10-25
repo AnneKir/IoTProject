@@ -2,13 +2,12 @@
 
 const SimplePeerWrapper = require('simple-peer-wrapper');
 var wrtc = require('wrtc');
-const id = Math.floor(Math.random() * 100);
 // in your client code - create a wrapper and connect to your server
 const options = {
     serverUrl: 'http://localhost:8081',
     debugger: true,
     simplePeerOptions: {
-      initiator: false,
+      initiator: true,
       trickle: false,
       wrtc: wrtc
     }
@@ -41,10 +40,11 @@ function gotData(data) {
 }
 // document.querySelector()
 
+let count = 0; 
 function gotConnect() {
   console.log('peer connection open');
-  console.log("sending: hej from " + id.toString());
-  spw.send("hej from " + id.toString());
+  count++;
+  spw.send("hej" + count.toString());
 }
 
 spw.on('error', err => console.log('error', err))

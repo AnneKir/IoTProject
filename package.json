@@ -1,0 +1,22 @@
+{
+  "name": "iotproject",
+  "version": "1.0.0",
+  "description": "idk",
+  "main": "first.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnneKir/IoTProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnneKir/IoTProject/issues"
+  },
+  "homepage": "https://github.com/AnneKir/IoTProject#readme",
+  "bin" : {
+    "your-script" : "./your-script.js"
+  }
+}
