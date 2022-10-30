@@ -1,18 +1,22 @@
 // https://github.com/lisajamhoury/simple-peer-wrapper
 
-const SimplePeerWrapper = require('simple-peer-wrapper');
-var wrtc = require('wrtc');
+import React from 'react';
+// import Grid from '@material-ui/core/Grid';
+// import ReactDOM from 'react-dom/client';
+
+import SimplePeerWrapper from 'simple-peer-wrapper';
+import wrtc  from 'wrtc';
 const id = Math.floor(Math.random() * 100);
 // in your client code - create a wrapper and connect to your server
 const options = {
-    serverUrl: 'http://localhost:8081',
-    debugger: true,
-    simplePeerOptions: {
-      initiator: false,
-      trickle: false,
-      wrtc: wrtc
-    }
-  };
+  serverUrl: 'http://localhost:8081',
+  debugger: true,
+  simplePeerOptions: {
+    initiator: false,
+    trickle: false,
+    wrtc: wrtc
+  }
+};
 
 const spw = new SimplePeerWrapper(options); // creates a socket connection to signaling server
 spw.connect();  // initiates peer connection via socket connection
@@ -47,4 +51,19 @@ function gotConnect() {
   spw.send("hej from " + id.toString());
 }
 
+function sendMessage(msg) {
+  console.log('Sending: ' + msg.toString())
+  spw.send(msg);
+}
+
+// spw.on('close', () => {spw.close()})
+// window.onbeforeunload = () => {
+//   spw.close();
+// };
+
 spw.on('error', err => console.log('error', err))
+
+
+
+
+

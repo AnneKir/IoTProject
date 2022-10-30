@@ -1,17 +1,18 @@
 // https://github.com/lisajamhoury/simple-peer-wrapper
 
-const SimplePeerWrapper = require('simple-peer-wrapper');
-var wrtc = require('wrtc');
+import wrtc from 'wrtc';
+
+import SimplePeerWrapper from 'simple-peer-wrapper';
 // in your client code - create a wrapper and connect to your server
 const options = {
-    serverUrl: 'http://localhost:8081',
-    debugger: true,
-    simplePeerOptions: {
-      initiator: true,
-      trickle: false,
-      wrtc: wrtc
-    }
-  };
+  serverUrl: 'http://localhost:8081',
+  debugger: true,
+  simplePeerOptions: {
+    initiator: true,
+    trickle: false,
+    wrtc: wrtc
+  }
+};
 
 const spw = new SimplePeerWrapper(options); // creates a socket connection to signaling server
 spw.connect();  // initiates peer connection via socket connection
@@ -40,7 +41,7 @@ function gotData(data) {
 }
 // document.querySelector()
 
-let count = 0; 
+let count = 0;
 function gotConnect() {
   console.log('peer connection open');
   count++;

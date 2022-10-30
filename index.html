@@ -1,20 +1,31 @@
 <html>
 <!-- npm install simple-peer -->
+
+<head>
+  <title>RainbowDash's web app</title>
+  <script src="browser/bundle.js"></script>
+</head>
+
 <body>
-    <style>
-        #outgoing {
-          width: 600px;
-          word-wrap: break-word;
-          white-space: normal;
-        }
-    </style>
-    <form>
-        <textarea id="incoming"></textarea>
-        <button type="submit">submit</button>
+  <style>
+    #outgoing {
+      width: 600px;
+      word-wrap: break-word;
+      white-space: normal;
+    }
+  </style>
+  <div id="root">
+
+  </div>
+  <!-- <form>
+        <textarea id="incoming">Hello</textarea>
+        <button id="submitButton" type="submit">submit</button>
     </form>
-    <pre id="outgoing"></pre>
-    <script src="simplepeer.min.js"></script>
-    <script>
+    <pre id="outgoing"></pre> -->
+
+  <!-- <script src="./client.js"></script> -->
+  <!-- <script src="simplepeer.min.js"></script> -->
+  <!-- <script>
       const options = {
         serverUrl: 'http://localhost:8081',
         simplePeerOptions: {
@@ -53,7 +64,8 @@
       p.on('data', data => {
         console.log('data: ' + data)
       })
-      </script> 
-  <script> src="client.js"</script>
+      </script>  -->
+  <!-- <script> src="client.js"</script> -->
 </body>
+
 </html>
