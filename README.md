@@ -2,7 +2,7 @@
 - signalling server er nu ./scr/signallingServer.js
 - for at se hjemmesiden, kør da 'npm start' i terminalen
 - det er muligt i skal installere ting igen i terminalen, måske både fra root folderen og src foldere (ved æk hvorfor)
-
+- I skal have en folder 'node_modules' som vidst bliver lavet ved 
 
 
 # Getting Started with Create React App
