@@ -1,8 +1,9 @@
 # notes from AM
-- signalling server er nu ./scr/signallingServer.js
+- signalling serveren som før hed app.js er nu ./scr/signallingServer.js
 - for at se hjemmesiden, kør da 'npm start' i terminalen
+- det I ser på hjemmesiden ændres i /scr/App.tsx
 - det er muligt i skal installere ting igen i terminalen, måske både fra root folderen og src foldere (ved æk hvorfor)
-- I skal have en folder 'node_modules' som vidst bliver lavet ved 
+- Jeg har includeret folderen 'node_modules' i håbet om at det bliver nemmere for jer at få det til at virke med det samme *krydser fingre*  
 
 
 # Getting Started with Create React App
