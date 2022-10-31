@@ -2,3 +2,4 @@
 declare module 'simple-peer-wrapper';
 declare module 'simple-peer-server';
 declare module 'wrtc';
+declare const startServer: Function;

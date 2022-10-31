@@ -19,9 +19,14 @@ const options = {
 };
 
 const spw = new SimplePeerWrapper(options); // creates a socket connection to signaling server
-spw.connect();  // initiates peer connection via socket connection
+export function startClient() {
+  spw.connect();  // initiates peer connection via socket connection
+  spw.on('connect', gotConnect);
+  spw.on('data', gotData);
 
-spw.on('connect', gotConnect);
+}
+
+
 
 // document.getElementById("incoming");
 
@@ -34,7 +39,6 @@ spw.on('connect', gotConnect);
 let partnerMouse;
 
 // when we receive data, call the gotData function
-spw.on('data', gotData);
 
 // this runs each time data is received
 // the incoming data is passed into the function

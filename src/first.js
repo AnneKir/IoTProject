@@ -17,6 +17,14 @@ const options = {
 const spw = new SimplePeerWrapper(options); // creates a socket connection to signaling server
 spw.connect();  // initiates peer connection via socket connection
 
+export function startServer() {
+  const spw = new SimplePeerWrapper(options);
+  console.log("ehek")
+  spw.connect();
+  spw.on('connect', gotConnect);
+  spw.on('data', gotData);
+}
+
 spw.on('connect', gotConnect);
 
 // document.getElementById("incoming");
