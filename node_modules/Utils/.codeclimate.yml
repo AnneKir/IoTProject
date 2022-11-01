@@ -1,0 +1,36 @@
+engines:
+  duplication:
+      enabled: true
+      config:
+        languages:
+        - javascript:
+  eslint:
+      enabled: true
+  fixme:
+      enabled: true
+  nodesecurity:
+      enabled: true
+  markdownlint:
+      enabled: true
+ratings:
+  paths:
+  - lib/**
+exclude_paths:
+  - typings
+  - vendors
+  - node_modules
+  - bin
+  - doc
+  - tmp
+  - .git
+  - .idea
+  - spec
+  - src
+  - dist
+  - interfaces
+  - polyfills
+  - CHANGELOG.md
+  - LICENSE.md
+  - "**.d.ts"
+  - "**.js"
+  - "**.json"
