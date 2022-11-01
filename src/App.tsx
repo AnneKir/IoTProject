@@ -85,10 +85,10 @@ function App(): JSX.Element {
         <Paper elevation={2}>
           <Grid container alignItems={"center"} justifyContent={"center"} padding={2}>
             <Grid item xs={6}>
-              <Typography>This is a fuckign website</Typography>
+              <Typography>This is a website</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography>Where u can upload fuckign picutes</Typography>
+              <Typography>Where u can upload picutes</Typography>
             </Grid>
             <Grid item marginTop={4} xs={10}>
               This could be a thing

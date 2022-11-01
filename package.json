@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "signal": "node ./signallingServer.js",
+    "signal": "node ./src/signallingServer.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -10,6 +10,11 @@ import SimplePeerServer from 'simple-peer-server';
 // const http = require('http');
 import http from 'http'; 
 
+const options = {
+    
+    method: 'POST',
+}
+
 const server = http.createServer();
 const spServer = new SimplePeerServer(server, true);
 
