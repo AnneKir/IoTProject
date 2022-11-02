@@ -5,6 +5,8 @@
 - det er muligt i skal installere ting igen i terminalen, måske både fra root folderen og src foldere (ved æk hvorfor)
 - Jeg har includeret folderen 'node_modules' i håbet om at det bliver nemmere for jer at få det til at virke med det samme *krydser fingre*  
 
+- React-simple-peer: https://www.npmjs.com/package/react-simple-peer
+
 
 # Getting Started with Create React App
 

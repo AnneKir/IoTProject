@@ -2,4 +2,5 @@
 declare module 'simple-peer-wrapper';
 declare module 'simple-peer-server';
 declare module 'wrtc';
+// declare module 'socket.io-client';
 declare const startServer: Function;
