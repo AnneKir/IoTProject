@@ -5,7 +5,7 @@ import './App.css';
 // import wrtc from 'wrtc';
 import ReactDOM from 'react-dom/client';
 import React from 'react';
-import { SignalData } from 'simple-peer';
+import SimplePeer, { SignalData, Instance } from 'simple-peer';
 import { io, Socket } from 'socket.io-client';
 import { ServerToClientEvents, ClientToServerEvents } from "./SocketTypes";
 import {
@@ -18,19 +18,25 @@ import {
   setRoom,
   Peers,
   JoinRoomButton,
-  PeerVideo
+  PeerVideo,
+  ReactSimplePeerModel
 } from 'react-simple-peer';
 // import { startClient, gotData } from './client';
 // import { Box } from '@mui/system';
 
 
-class User {
-  username: string;
+// import SimplePeer, {Instance} from "simple-peer";
 
-  constructor(username: string) {
+export class User implements ReactSimplePeerModel {
+  public username?: string;
+  public stream: MediaStream | null;
+  public connection: Instance;
+
+  constructor(username: string, stream: MediaStream) {
     this.username = username;
+    this.connection = new SimplePeer()
+    this.stream = stream;
   }
-
 }
 
 
@@ -47,7 +53,7 @@ function emitOfferResponse(joinRequest: JoinRequest, signalData: SignalData, soc
   console.log("Send offer-response")
 }
 
-function handleJoinResponse(processJoinResponse: (offer: SignalData, id: string, room: string , roomCreatorId: string) => void, socket: Socket) {
+function handleJoinResponse(processJoinResponse: (offer: SignalData, id: string, room: string, roomCreatorId: string) => void, socket: Socket) {
   socket.on('join-response', (offer: SignalData, id: string, roomCreatorId: string) => processJoinResponse(offer, id, 'AZE', roomCreatorId))
   console.log("Received join-response")
   console.log(processJoinResponse)
@@ -97,7 +103,85 @@ function App(): JSX.Element {
         emitOfferResponse={(joinRequest: JoinRequest, signalData: SignalData) => emitOfferResponse(joinRequest, signalData, ws)}
 
         // Wrapper around JoinResponse event listener that provides processing callback for that response.
-        onJoinResponse={(processJoinResponse: (offer: SignalData, id: string, room: string , roomCreatorId: string) => void) => handleJoinResponse(processJoinResponse, ws)}
+        onJoinResponse={(processJoinResponse: (offer: SignalData, id: string, room: string, roomCreatorId: string) => void) => handleJoinResponse(processJoinResponse, ws)}
+
+        // Wrapper around JoinAck event emitter that provides SignalingData as well as room id, received peer id and self peer id.
+        emitJoinAck={(signalData: SignalData, room, recievedId, id) => emitJoinResponse(signalData, room, recievedId, id, ws)}
+
+        // Wrapper around clientOffer event listener that provides processing callback for that offer.
+        onClientOffer={(processClientOffer: (offer: ClientOffer, id: string, isRoomCreator: boolean, emitterId: string) => void) => handleClientOffer(processClientOffer, ws)}
+
+        // Wrapper around InitiatorOffers event emitter that provides list of offers, self id and room id.
+        emitInitiatorOffers={(offers, id, room) => emitInitiatorOffers(offers, id, room, ws)}
+
+        // Wrapper around leaving event listener that provides processing callback for that leaving peer.
+        onLeaving={(processLeaving: (id: string) => void) => handleLeaving(processLeaving, ws)}
+      >
+
+        <div className="container">
+          <div className="form-group">
+            <input className="form-control" id="exampleInputEmail1" placeholder="Username" autoFocus={true}
+              type="text"
+              onChange={async event => setModel(new User(event.target.value, await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: true
+              })))} />
+          </div>
+
+          <div className="col-10 offset-1">
+            <button type="button" className="btn btn-primary">
+              State <span className="badge badge-light">
+                <State />
+              </span>
+            </button>
+
+            <button className="btn btn-primary m-1" onClick={() => {
+              const roomId = 'AZE';
+              const room = { initiatorPeerId: getId(), roomId: roomId };
+              setRoom(roomId);
+              ws.emit('create', room);
+              console.log("peer " + getId() + " tried to create room " + roomId)
+            }}>Create a room
+            </button>
+
+            <JoinRoomButton className="btn btn-secondary m-1" room={'AZE'} join={() => {
+              ws.emit('join-request', { roomId: 'AZE', peerId: getId() });
+              console.log("peer " + getId() + " tried to join room 'AZE'");
+            }}><>Join a room</></JoinRoomButton>
+          </div>
+
+
+          <Peers>
+            {
+              peers => {
+                console.log("trying to add peer :)")
+                return <div className="container row">
+                  {peers.map((peer: User) => <div className="col-3" key={peer.username}>
+                    {/* <button type="button" className="btn btn-primary">
+                      <PeerVideo className="center" style={{ height: '70px' }} peer={peer} />
+                      <p className="text-center">
+                        {peer.username}
+                      </p>
+                    </button> */}
+                    <Typography>Peer has been added</Typography>
+                  </div>
+                  )}
+                </div>
+              }
+            }
+          </Peers>
+
+        </div>
+      </Setup>
+      {/* <Setup
+        // Wrapper around OfferRequest event listener that provides processing callback for that request.
+        onOfferRequest={(processOfferRequest: (JoinRequest: JoinRequest) => void) => handleOfferRequest(processOfferRequest, ws)}
+
+        // Wrapper around OfferRequest event emitter that provides both JoinRequest and SignalingData objects.
+        emitOfferResponse={(joinRequest: JoinRequest, signalData: SignalData) => emitOfferResponse(joinRequest, signalData, ws)}
+
+        // Wrapper around JoinResponse event listener that provides processing callback for that response.
+        onJoinResponse={(processJoinResponse: (offer: SignalData, id: string, room: string, roomCreatorId: string) => void) => handleJoinResponse(processJoinResponse, ws)}
 
         // Wrapper around JoinAck event emitter that provides SignalingData as well as room id, received peer id and self peer id.
         emitJoinAck={(signalData: SignalData, room, recievedId, id) => emitJoinResponse(signalData, room, recievedId, id, ws)}
@@ -163,7 +247,7 @@ function App(): JSX.Element {
             </Peers>
           </header>
         </div>
-      </Setup>
+      </Setup> */}
       {/* <div className="App">
       <Box padding={4}>
         <Paper elevation={2}>
