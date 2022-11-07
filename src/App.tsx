@@ -1,44 +1,25 @@
-// import logo from './logo.svg';
-import { Grid, Paper, Typography, Button, TextField } from '@mui/material';
-import './App.css';
-// // import './first';
-// // import wrtc from 'wrtc';
-// import ReactDOM from 'react-dom/client';
-// import React, { useState } from 'react';
-// // import HookMqtt from 'MQTT_Hook';
-// // import paho from 'Paho'';
-// import { HookMqtt } from './components/Hook/index'
-// import { Connection } from './components/Hook/Connection';
-// import { Publisher } from './components/Hook/Publisher';
-// import SimplePeer, { SignalData, Instance } from 'simple-peer';
-// import { io, Socket } from 'socket.io-client';
-// import { ServerToClientEvents, ClientToServerEvents } from "./SocketTypes";
-// import {
-//   Setup,
-//   JoinRequest,
-//   ClientOffer,
-//   State,
-//   setModel,
-//   getId,
-//   setRoom,
-//   Peers,
-//   JoinRoomButton,
-//   PeerVideo,
-//   ReactSimplePeerModel
-// } from 'react-simple-peer';
-// import { urlToHttpOptions } from 'url';
-import mqtt, { IClientOptions } from 'mqtt';
+import { DialogContent, DialogActions, DialogTitle, DialogContentText, Dialog, Grid, Divider, Paper, Typography, IconButton, TextField, CardHeader, CardContent, Button } from '@mui/material';
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined'; import './App.css';
+import mqtt, { IClientOptions, MqttClient } from 'mqtt';
+import Popup from 'reactjs-popup';
+import React from "react";
+
+function subscribe(client: MqttClient, topic: string) {
+  client.subscribe("RainbowDash/" + topic);
+  console.log("Subscribed to: " + topic);
+}
+
+function subscribeToStorskrald(client: MqttClient) {
+  subscribe(client, "Storskrald");
+}
+
+function uploadImage() {
+
+}
 
 
 function App(): JSX.Element {
-
-  // const [connectStatus, setConnectStatus] = useState("");
-  // const [client, setClient] = useState<MqttClient>(() => MqttClient);
-  // const mqttConnect = (host: string, mqttOption?: mqtt.IClientOptions) => {
-  //   setConnectStatus('Connecting');
-  //   const client: MqttClient = mqtt.connect(host, mqttOption);
-  //   setClient(() => client);
-  // }
+  const [dialogVisible, setDialogVisible] = React.useState(false);
 
   const url = "ws://diotp2p.mooo.com:8083"
   const options: IClientOptions = {
@@ -51,39 +32,68 @@ function App(): JSX.Element {
     rejectUnauthorized: false
   }
 
-  // const clientConnectionOptions = {
-  //   keepalive: 100,
-  //   protocolId: 'MQTT',
-  //   protocolVersion: 4,
-  //   clean: true,
-  //   reconnectPeriod: 1000,
-  //   connectTimeout: 30 * 3000,
-  //   will: {
-  //     topic: 'WillMsg',
-  //     payload: 'Connection Closed abnormally..!',
-  //     qos: 0,
-  //     retain: false
-  //   },
-  //   rejectUnauthorized: false
-  // };
-
   const client = mqtt.connect(url, options)
 
   client.on('connect', function () {
     console.log("Im funckign connetced !!!!!!!!!!!!!!!!")
   });
 
+  const handleClickToOpen = () => {
+    setDialogVisible(true);
+  };
 
+  const handleToClose = () => {
+    setDialogVisible(false);
+  };
 
 
   return (
     <div className='App'>
-      {/* <HookMqtt /> */}
-      <Grid container alignItems={"center"} justifyContent="center">
-        <Grid item>
-          <Typography>Hello fuckers</Typography>
-        </Grid>
-      </Grid>
+      <Paper elevation={2} sx={{ width: "100%" }}>
+        <CardHeader title={"Rainbow Dash"}></CardHeader>
+        <CardContent>
+          <Divider />
+          <Grid container padding={1} alignItems='center'>
+            <Grid item xs={11}>
+              <Typography variant='body2'>Subscribed to:</Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton size='small' onClick={handleClickToOpen}>
+                <AddCircleOutlinedIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Divider />
+          <Grid container padding={1} alignItems='center' justifyContent='center'>
+            <Grid item xs={10}>
+              <Typography variant='h5'>Storskrald</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Button size='small' variant="contained" onClick={() => console.log('picture uploaded')}>
+                Upload
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContent>
+        <Dialog open={dialogVisible} onClose={handleToClose}>
+          <DialogTitle>{"What to you want to subscribe to?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              I am Good, Hope the same for you!
+            </DialogContentText>
+            <TextField placeholder='Topic' size='small' />
+            <Button variant='contained' onClick={() => "should subsribe"}>
+              Subscribe
+            </Button>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleToClose}
+              color="primary" autoFocus>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Paper>
     </div>
   );
 }
