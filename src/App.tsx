@@ -82,11 +82,7 @@ function convertBackToImage(byteArrayImg: string) {
 function convertBackToImg2(byteArrayString: string) {
   let utf8Encode = new TextEncoder();
   utf8Encode.encode(byteArrayString);
-  let uints = new Uint8Array(utf8Encode);
-  let base64 = btoa(String.fromCharCode(null, uints));
-  let url = 'data:image/jpeg;base64,' + base64;
 }
-
 
 // main function (ish)
 function App(): JSX.Element {
