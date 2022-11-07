@@ -5,7 +5,7 @@ client = mqtt.Client()
 client.connect('mqtt.eclipseprojects.io')
 client.subscribe("topic")
 
-with open("yee.jpg", "rb") as image:
+with open("/images/noback - Kopi.jpg", "rb") as image:
     img = image.read()
     
 message = img
