@@ -110,12 +110,12 @@ function App(): JSX.Element {
       // This is the first message from this topic
       // create topic and add an array with the image
       const array: string[] = [];
-      array.push(message)
+      array.push(message.toString())
       allReceivedImages.set(topic, array);
     } else {
       // We have previously gotten messages about this topic
       // Add new image to this topic
-      imagesInTopic.push(message);
+      imagesInTopic.push(message.toString());
     }
   })
 
