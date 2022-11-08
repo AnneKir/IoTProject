@@ -5,8 +5,12 @@ import Popup from 'reactjs-popup';
 import { useEffect, useState } from 'react';
 
 const subscribedTopics: string[] = [];
+const receivedImages: Uint8Array[] = [];
 
-const url = "ws://diotp2p.mooo.com:8083"
+// Map<topic, listOfImages>
+const allReceivedImages = new Map<string, string[]>();
+
+const url = "ws://diotp2p.mooo.com:8083";
 const options: IClientOptions = {
   port: 8083,
   host: "diotp2p.mooo.com",
@@ -26,10 +30,10 @@ function uploadImage(topic: string, files: FileList, client: MqttClient) {
     if (file != null) {
       const byteArray = getByteArray(file);
       byteArray.then(value => {
-        console.log("Success: " + value); // Success!
+        // console.log("Success: " + value); // Success!
         client.publish("RainbowDash/" + topic, value.toString());
         console.log("publishing file to topic: " + topic);
-        console.log("byte array to string: " + value.toString());
+        // console.log("byte array to string: " + value.toString());
         return value.toString;
       })
     }
@@ -76,12 +80,12 @@ function fileToByteArray(file: any): Promise<Uint8Array> {
 }
 
 function convertBackToImage(byteArrayImg: string) {
-  const img = "data:image/png;base64," + byteArrayImg;
+  return "data:image/png;base64," + byteArrayImg;
 }
 
 function convertBackToImg2(byteArrayString: string) {
   let utf8Encode = new TextEncoder();
-  utf8Encode.encode(byteArrayString);
+  return utf8Encode.encode(byteArrayString);
 }
 
 // main function (ish)
@@ -99,6 +103,20 @@ function App(): JSX.Element {
   client.on('message', (topic, message) => {
     console.log("message: " + message);
     console.log("topic: " + topic);
+    receivedImages.push(message);
+    // save received image somewhere, but only once please
+    const imagesInTopic = allReceivedImages.get(topic)
+    if (imagesInTopic === undefined) {
+      // This is the first message from this topic
+      // create topic and add an array with the image
+      const array: string[] = [];
+      array.push(message)
+      allReceivedImages.set(topic, array);
+    } else {
+      // We have previously gotten messages about this topic
+      // Add new image to this topic
+      imagesInTopic.push(message);
+    }
   })
 
 
@@ -145,6 +163,13 @@ function App(): JSX.Element {
                     </Grid>
                     <Grid item xs={2}>
                       <input type='file' onChange={(e) => e.target.files != null ? uploadImage(topic, e.target.files, client) : null} />
+                    </Grid>
+                    <Grid item xs={12}>
+                      {receivedImages.map((array) => {
+                        // const img = convertBackToImg2(array);
+                        return <img src={convertBackToImage(array.toString())} alt='' />
+                      }
+                      )}
                     </Grid>
                     <Grid item xs={12}>
                       <Divider />
