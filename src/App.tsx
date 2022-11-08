@@ -3,6 +3,9 @@ import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined'; impor
 import mqtt, { IClientOptions, MqttClient, IPublishPacket, OnMessageCallback } from 'mqtt';
 import Popup from 'reactjs-popup';
 import { useEffect, useState } from 'react';
+import { configureAbly, useChannel } from "@ably-labs/react-hooks";
+
+configureAbly({ key: "OvMNXQ.X7M2HQ:-X-x182cpzFhWvj5W2_i2jJOktbNhzrtoEaoP3rpdMs" });
 
 const subscribedTopics: string[] = [];
 const receivedImages: Uint8Array[] = [];
@@ -92,6 +95,10 @@ function convertBackToImg2(byteArrayString: string) {
 function App(): JSX.Element {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [enteredTopic, setEnteredTopic] = useState("");
+
+  const [channel, ably] = useChannel("channel-name", (message) => {
+    console.log(message);
+  });
 
   // useEffect(() => {
   // if (client) {
