@@ -40,6 +40,25 @@ function uploadImage(topic: string, files: FileList, client: MqttClient) {
   }
 }
 
+function uploadImageTry2(topic: string, files: FileList, client: MqttClient) {
+  for (let i = 0; i < files.length; i++) {
+    const img = files.item(i);
+    if (img != null) {
+      const imageToBase64 = require('image-to-base64');
+      imageToBase64(img).then(
+        (response: any) => {
+          console.log(response); 
+          client.publish("RainbowDash/" + topic, response);
+          console.log("publishing file to topic: " + topic);
+        }
+      ).catch((error: any) => {
+          console.log(error); 
+        }
+      )
+    }
+  }
+}
+
 async function getByteArray(file: File) {
   //Get file from your input element
 
@@ -79,13 +98,16 @@ function fileToByteArray(file: any): Promise<Uint8Array> {
   })
 }
 
-function convertBackToImage(byteArrayImg: string) {
-  return "data:image/png;base64," + byteArrayImg;
+function convertBackToImage(byteArrayImg: Uint8Array) {
+  return "data:image/jpeg;base64," + byteArrayImg;
 }
 
-function convertBackToImg2(byteArrayString: string) {
-  let utf8Encode = new TextEncoder();
-  return utf8Encode.encode(byteArrayString);
+// Buffer.from(str, 'base64') and buf.toString('base64').
+function convertBackToImg2(byteArrayString: Uint8Array) {
+  const decoder = new TextDecoder('utf8');
+  const idk = decoder.decode(byteArrayString);
+  const b64encoded = idk.toString();
+  return "data:image/png;base64," + b64encoded;
 }
 
 // main function (ish)
@@ -167,7 +189,8 @@ function App(): JSX.Element {
                     <Grid item xs={12}>
                       {receivedImages.map((array) => {
                         // const img = convertBackToImg2(array);
-                        return <img src={convertBackToImage(array.toString())} alt='' />
+                        console.log("hello")
+                        return <img id='billede' src={convertBackToImg2(array)} alt='' />
                       }
                       )}
                     </Grid>
