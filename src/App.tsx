@@ -5,7 +5,7 @@ import Popup from 'reactjs-popup';
 import { useEffect, useState } from 'react';
 
 const subscribedTopics: string[] = [];
-const receivedImages: Uint8Array[] = [];
+const receivedImages: string[] = [];
 
 // Map<topic, listOfImages>
 const allReceivedImages = new Map<string, string[]>();
@@ -44,6 +44,7 @@ function uploadImageTry2(topic: string, files: FileList, client: MqttClient) {
   for (let i = 0; i < files.length; i++) {
     const img = files.item(i);
     if (img != null) {
+      console.log("im in if, line 47")
       const imageToBase64 = require('image-to-base64');
       imageToBase64(img).then(
         (response: any) => {
@@ -58,6 +59,22 @@ function uploadImageTry2(topic: string, files: FileList, client: MqttClient) {
     }
   }
 }
+
+function uploadImageTry3(topic: string, files: FileList, client: MqttClient) {
+  for (let i = 0; i < files.length; i++) {
+      const img = files.item(i);
+      if (img != null) {
+          const url = URL.createObjectURL(img);
+          console.log("url: " + url);
+          client.publish("RainbowDash/" + topic, url);
+          console.log("publishing file to topic: " + topic);
+          }   
+      }
+  }
+
+  function showURLImage(byteArrayImg: string){
+    return byteArrayImg;
+  }
 
 async function getByteArray(file: File) {
   //Get file from your input element
@@ -98,16 +115,10 @@ function fileToByteArray(file: any): Promise<Uint8Array> {
   })
 }
 
-function convertBackToImage(byteArrayImg: Uint8Array) {
-  return "data:image/jpeg;base64," + byteArrayImg;
-}
 
-// Buffer.from(str, 'base64') and buf.toString('base64').
-function convertBackToImg2(byteArrayString: Uint8Array) {
-  const decoder = new TextDecoder('utf8');
-  const idk = decoder.decode(byteArrayString);
-  const b64encoded = idk.toString();
-  return "data:image/png;base64," + b64encoded;
+
+function convertBackToImage(byteArrayImg: string) {
+  return "data:image/jpeg;base64," + byteArrayImg;
 }
 
 // main function (ish)
@@ -125,7 +136,7 @@ function App(): JSX.Element {
   client.on('message', (topic, message) => {
     console.log("message: " + message);
     console.log("topic: " + topic);
-    receivedImages.push(message);
+    receivedImages.push(message.toString());
     // save received image somewhere, but only once please
     const imagesInTopic = allReceivedImages.get(topic)
     if (imagesInTopic === undefined) {
@@ -184,15 +195,16 @@ function App(): JSX.Element {
                       <Typography variant='h5'>{topic}</Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <input type='file' onChange={(e) => e.target.files != null ? uploadImage(topic, e.target.files, client) : null} />
+                      <input type='file' onChange={(e) => e.target.files != null ? uploadImageTry3(topic, e.target.files, client) : null} />
                     </Grid>
                     <Grid item xs={12}>
-                      {receivedImages.map((array) => {
+                      {/* {receivedImages.map((array) => {
                         // const img = convertBackToImg2(array);
                         console.log("hello")
-                        return <img id='billede' src={convertBackToImg2(array)} alt='' />
+                        return <img id='billede' src={showURLImage(array)} alt='hi' />
                       }
-                      )}
+                      )} */}
+                      {<img id='bil2' src={showURLImage(receivedImages.pop() ?? "fh")} alt='efef'></img>}
                     </Grid>
                     <Grid item xs={12}>
                       <Divider />
